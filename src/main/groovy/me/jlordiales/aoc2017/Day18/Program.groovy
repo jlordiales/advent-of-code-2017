@@ -72,26 +72,22 @@ class Program implements Runnable {
     }
 
     private def add(String destinationRegistry, String value) {
-        registers.setValue(destinationRegistry, registers.getValue(destinationRegistry) + getValue(value))
+        registers.computeValue(destinationRegistry, { it + getValue(value) })
         currentInstruction++
     }
 
     private def mul(String destinationRegistry, String value) {
-        registers.setValue(destinationRegistry, registers.getValue(destinationRegistry) * getValue(value))
+        registers.computeValue(destinationRegistry, { it * getValue(value) })
         currentInstruction++
     }
 
     private def mod(String destinationRegistry, String value) {
-        registers.setValue(destinationRegistry, registers.getValue(destinationRegistry) % getValue(value))
+        registers.computeValue(destinationRegistry, { it % getValue(value) })
         currentInstruction++
     }
 
-
     private long getValue(String value) {
-        if (('a'..'z').containsWithinBounds(value)) {
-            return registers.getValue(value)
-        }
-        Long.valueOf(value)
+        value.isNumber() ? value.toLong() : registers.getValue(value)
     }
 
     @Override
